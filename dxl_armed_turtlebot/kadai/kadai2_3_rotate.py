@@ -14,6 +14,11 @@ def cb(msg):
     size = msg.rect.size.width * msg.rect.size.height
     rospy.loginfo("rect size: %d\n" % size)
     if (size < 50000):
+        if (msg.rect.center.x > 340):
+            cmd_vel.angular.z = -0.5
+        elif (msg.rect.center.x < 300):
+            cmd_vel.angular.z = 0.5
+    if (size == 0):
         cmd_vel.angular.z = 0.5
     cmd_vel.angular.z
     pub.publish(cmd_vel)
@@ -21,7 +26,7 @@ def cb(msg):
 
 if __name__ == '__main__':
     try:
-        rospy.init_node("kadai2_3_cmd_vel", anonymous=True)
+        rospy.init_node("kadai2_3_rotate", anonymous=True)
         rospy.Subscriber("/camshift/track_box", RotatedRectStamped, cb)
         pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         rospy.spin()
